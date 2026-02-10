@@ -1,0 +1,24 @@
+{
+  "source_image": "erfurt_000097_000019.png",
+  "fog_type": "fog",
+  "severity": "medium",
+  "variant": 1,
+  "beta": 0.0607,
+  "atmospheric_light_rgb": [
+    0.8408,
+    0.8922,
+    0.8779
+  ],
+  "depth_scale": 25.0,
+  "depth_source": "Cityscapes stereo disparity (inverse + log-scaled)",
+  "depth_invalid_handling": {
+    "method": "Telea inpainting + bilateral filter",
+    "inpaint_radius": 10,
+    "bilateral_d": 9,
+    "bilateral_sigmaColor": 50,
+    "bilateral_sigmaSpace": 50,
+    "windshield_handling": "gradient falloff from last valid row",
+    "note": "Inpainted regions are estimated depth for visual continuity, not measured geometry"
+  },
+  "random_seed": 42
+}

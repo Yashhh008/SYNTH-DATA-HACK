@@ -1,0 +1,32 @@
+# ==============================
+# Large binary data (too big for GitHub)
+# ==============================
+images_clear/
+images_foggy/
+depth_maps/
+depth_maps_filled/
+raw_cityscapes/
+
+# ==============================
+# Keep these (pushed to repo):
+# - scripts/
+# - annotations/
+# - metadata/
+# - debug/ (comparison grids)
+# - classes.txt
+# - README.md
+# ==============================
+
+# Log files
+*.log
+*_log.txt
+*_err.txt
+
+# Temp files
+step1_log.txt
+step1_err.txt
+
+# Python
+__pycache__/
+*.pyc
+.venv/
