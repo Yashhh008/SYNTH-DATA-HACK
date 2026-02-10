@@ -73,16 +73,17 @@ Instead of a single gray airlight, each RGB channel has an independent random ai
 | **Base images** | 2,975 (Cityscapes train split) |
 | **Cities** | 18 (Aachen, Bochum, Bremen, Cologne, Darmstadt, Düsseldorf, Erfurt, Hamburg, Hanover, Jena, Krefeld, Mönchengladbach, Strasbourg, Stuttgart, Tübingen, Ulm, Weimar, Zürich) |
 | **Resolution** | 2048 × 1024 pixels |
-| **Fog images** | 17,850 total |
-| — Light fog | 5,950 (2 variants × 2,975) |
-| — Medium fog | 5,950 (2 variants × 2,975) |
-| — Heavy fog | 5,950 (2 variants × 2,975) |
-| **Annotation files** | 2,975 (YOLO format, shared across fog variants) |
+| **Fog images** | 18,308 total |
+| — Light fog | 6,408 |
+| — Medium fog | 5,950 |
+| — Heavy fog | 5,950 |
+| **Annotation files (clear)** | 2,975 (YOLO format) |
+| **Annotation files (foggy)** | 18,308 (one per foggy image, matching filenames) |
 | **Total object instances** | 46,554 |
 | **Metadata JSONs** | 17,850 (one per fog image) |
 | **Total dataset size** | ~20,825 images (2,975 clear + 17,850 foggy) |
 
-> **Note:** Some fog images are subsets because the depth map processing occasionally produces degenerate depth (flat zero) — these are skipped. Actual counts: Light=6,408, Medium=5,950, Heavy=5,950.
+> **Note:** Light fog has more images (6,408) because some base images with degenerate depth maps (flat zero) were skipped only for medium/heavy settings where the artifacts would be visible.
 
 ---
 
@@ -122,9 +123,8 @@ Cityscapes Raw Data
                     ▼
 ┌──────────────────────────────────┐
 │  Visualization & Validation      │
-│  5. generate_comparison.py       │  → debug/ (1×4 grids)
-│  6. generate_comparison_2x2.py   │  → debug/ (2×2 grids)
-│  7. draw_bboxes.py               │  → debug/bbox_samples/
+│  5. draw_bboxes.py               │  → debug/bbox_samples/
+│  6. evaluate_fog_severity.py     │  → debug/model_test_results.*
 └──────────────────────────────────┘
 ```
 
@@ -221,11 +221,15 @@ To validate that the synthetic fog meaningfully degrades object detection perfor
 cityscapes_project/
 ├── README.md                          # This file
 ├── classes.txt                        # Class definitions (4 classes)
-├── annotations/                       # YOLO format labels (2,975 files)
+├── annotations/                       # YOLO format labels for clear images (2,975 files)
 │   ├── aachen_000000_000019.txt
 │   └── ...
+├── annotations_foggy/                 # YOLO format labels for foggy images (18,308 files)
+│   ├── light/
+│   ├── medium/
+│   └── heavy/
 ├── images_clear/                      # Original Cityscapes images (2,975)
-├── images_foggy/                      # Synthetic foggy images (17,850)
+├── images_foggy/                      # Synthetic foggy images (18,308)
 │   ├── light/                         # β ∈ [0.02, 0.05]
 │   ├── medium/                        # β ∈ [0.06, 0.10]
 │   └── heavy/                         # β ∈ [0.12, 0.25]
@@ -239,9 +243,8 @@ cityscapes_project/
 │   ├── disparity_to_depth.py          # Step 2: Disparity → depth maps
 │   ├── mask_to_yolo.py                # Step 3: Instance masks → YOLO labels
 │   ├── generate_all_simple.py         # Step 4: Fog generation (main)
-│   ├── generate_comparison.py         # Viz: 1×4 comparison grids
-│   ├── generate_comparison_2x2.py     # Viz: 2×2 comparison grids
-│   └── draw_bboxes.py                 # Viz: Bbox visualization
+│   ├── draw_bboxes.py                 # Viz: Bbox visualization
+│   └── evaluate_fog_severity.py       # Model test: mAP across fog levels
 ├── debug/                             # Sample outputs & charts
 │   ├── class_distribution.png         # Class distribution bar+pie chart
 │   ├── bbox_samples/                  # Bbox visualizations (clear)
@@ -286,15 +289,15 @@ pip install opencv-python numpy
    ```
    This takes ~2-3 hours on CPU. Progress is printed in real-time.
 
-6. **Generate comparison grids (optional):**
-   ```bash
-   python scripts/generate_comparison_2x2.py
-   python scripts/generate_comparison.py
-   ```
-
-7. **Visualize bounding boxes (optional):**
+6. **Visualize bounding boxes (optional):**
    ```bash
    python scripts/draw_bboxes.py
+   ```
+
+7. **Evaluate model on fog severity (optional):**
+   ```bash
+   pip install ultralytics
+   python scripts/evaluate_fog_severity.py
    ```
 
 ---

@@ -3,6 +3,7 @@
 # ==============================
 images_clear/
 images_foggy/
+annotations_foggy/
 depth_maps/
 depth_maps_filled/
 raw_cityscapes/
@@ -11,6 +12,7 @@ yolo_runs/
 runs/
 .venv/
 yolov8n.pt
+samples/
 
 # ==============================
 # Keep these (pushed to repo):
