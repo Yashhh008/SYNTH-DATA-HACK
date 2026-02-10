@@ -6,6 +6,11 @@ images_foggy/
 depth_maps/
 depth_maps_filled/
 raw_cityscapes/
+yolo_dataset/
+yolo_runs/
+runs/
+.venv/
+yolov8n.pt
 
 # ==============================
 # Keep these (pushed to repo):
